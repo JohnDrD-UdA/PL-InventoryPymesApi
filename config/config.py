@@ -1,8 +1,13 @@
-from sqlalchemy import create_engine, MetaData
-URL="postgresql://postgres:05131548314@localhost:5432/postgres"
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+URL="postgresql://postgres:root@localhost:5433/postgres"
 
 engine= create_engine(URL)
 
-conn=engine.connect()
+Base= declarative_base()
 
-meta_data=MetaData()
+Session= sessionmaker(bind=engine)
+
+session=Session()

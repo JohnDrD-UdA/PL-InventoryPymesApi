@@ -1,21 +1,57 @@
-from sqlalchemy import or_
-from config.config import conn
-from models.Location import Location_DTO
-from models.Location.Location import Location
+from config.config import session
+from models.Location.Location import Locations
+from models.Location.Location_DTO import locationDTO
 
 class LocationService():    
-    def getLocation(self):
-        result=conn.execute(Location.select())
-        resultAsList=[r._asdict() for r in result]
-        return resultAsList
-    
-    def createLocation(self,data: Location_DTO):
-        return conn.execute(Location.insert().values(data.__dict__))
-    
-    def updateLocation(self,id:int,data:Location_DTO):
-        values= data.__dict__
-        print(values)
-        conn.execute(Location.update().where(Location.c.id == id).values(values))
-        return values
-    def deleteLocation(self,id:int):
-        return conn.execute(Location.delete().where(Location.c.id == id))
+    def getLocations(self):
+        try:
+            result= session.query(Locations).all()
+            return result
+        except Exception as e:
+            print(e)
+            return "fail"
+    def createLocations(self,data: locationDTO):
+        try:
+            new_location= Locations(name=data.name, manager_id=data.manager_id, address=data.address, phone=data.phone)
+            session.add(new_location)
+            session.commit()
+            return "OK"
+        except Exception as e:
+            print(e)
+            return "fail"
+    def updateLocations(self,id:int,data:locationDTO):
+        try:
+            location= session.query(Locations).get(id)
+            if location:
+                location.name= data.name
+                location.phone=data.phone
+                location.address=data.address
+                location.manager_id=data.mail
+                session.commit()
+                return "ok"
+            else:
+                return "404"
+        except Exception as e:
+            print(e)
+            return "fail"
+    def deleteLocations(self,id:int):
+        try:
+            location= session.query(Locations).get(id)
+            if location:
+                session.delete(location)
+                session.commit()
+                return "ok"
+            else:
+                return "404"
+        except Exception as e:
+            print(e)
+            return "fail"
+    def getLocationById(seld,id:int):
+        try:
+            result= session.query(Locations).get(id)
+            if result:
+                return result
+            return "404"
+        except Exception as e:
+            print(e)
+            return "fail"

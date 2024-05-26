@@ -1,13 +1,12 @@
-from sqlalchemy import Table,Column
+from sqlalchemy import Column
 from sqlalchemy.sql.sqltypes import Integer,String
-from config.config import engine,meta_data
+from config.config import Base, engine
 
-Location= Table("Location", meta_data, 
-              Column("id",Integer, primary_key=True),
-              Column("name",String(100), nullable=False),
-              Column("manager_id",Integer, nullable=True),
-              Column("phone",String(20), nullable=False),
-              Column("address",String(100), nullable=False),
-              )
+class Locations(Base):
+    __tablename__='Locations'
 
-meta_data.create_all(engine)
+    id= Column(Integer, primary_key=True)
+    name=Column(String(100), nullable=False)
+    manager_id=  Column(Integer, nullable=True)
+    phone=Column(String(20), nullable=False)
+    address= Column(String(100), nullable=False)

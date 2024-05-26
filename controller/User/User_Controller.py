@@ -10,6 +10,10 @@ service= UserService()
 def getUsers():
     return service.getUsers()
 
+@userController.get("/user/{id}")
+def getUserById(id:int):
+    return service.getUserById(id)
+
 @userController.post("/users/create")
 def createUser(data: UserDTO):
     return service.createUsers(data)

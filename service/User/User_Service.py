@@ -1,20 +1,58 @@
-from sqlalchemy import or_
-from config.config import conn
-from models.User.User import User
+from config.config import session
+from models.User.User import Users
 from models.User.User_DTO import UserDTO
 
 class UserService():    
     def getUsers(self):
-        result=conn.execute(User.select())
-        resultAsList=[r._asdict() for r in result]
-        return resultAsList
-    
+        try:
+            result= session.query(Users).all()
+            return result
+        except Exception as e:
+            print(e)
+            return "fail"
     def createUsers(self,data: UserDTO):
-        return conn.execute(User.insert().values(data.__dict__))
-    
+        try:
+            new_user= Users(name=data.name, phone=data.phone, address=data.address, mail=data.mail,rol_id= data.rol_id)
+            session.add(new_user)
+            session.commit()
+            return "OK"
+        except Exception as e:
+            print(e)
+            return "fail"
     def updateUsers(self,id:int,data:UserDTO):
-        values= data.__dict__
-        conn.execute(User.update().where(User.c.id == id).values(values))
-        return values
+        try:
+            user= session.query(Users).get(id)
+            if user:
+                user.name= data.name
+                user.phone=data.phone
+                user.address=data.address
+                user.mail=data.mail
+                user.rol_id= data.rol_id
+                session.commit()
+                return "ok"
+            else:
+                return "404"
+        except Exception as e:
+            print(e)
+            return "fail"
     def deleteUsers(self,id:int):
-        return conn.execute(User.delete().where(User.c.id == id))
+        try:
+            user= session.query(Users).get(id)
+            if user:
+                session.delete(user)
+                session.commit()
+                return "ok"
+            else:
+                return "404"
+        except Exception as e:
+            print(e)
+            return "fail"
+    def getUserById(seld,id:int):
+        try:
+            result= session.query(Users).get(id)
+            if result:
+                return result
+            return "404"
+        except Exception as e:
+            print(e)
+            return "fail"

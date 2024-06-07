@@ -12,10 +12,17 @@ class StockService():
             return "fail"
     def createStocks(self,data: StockDTO):
         try:
-            new_stock= Stocks(ammount=data.ammount, product_id=data.product_id, location_id=data.location_id)
-            session.add(new_stock)
-            session.commit()
-            return "OK"
+            stock=  session.query(Stocks).filter(Stocks.product_id== data.product_id and Stocks.location_id).first()
+            if stock:
+                data.ammount=stock.amount+data.ammount
+                return self.updateStocks(stock.id,data)
+
+            else:
+                new_stock= Stocks(ammount=data.ammount, product_id=data.product_id, location_id=data.location_id)
+                session.add(new_stock)
+                session.commit()
+                return "OK"
+
         except Exception as e:
             print(e)
             return "fail"

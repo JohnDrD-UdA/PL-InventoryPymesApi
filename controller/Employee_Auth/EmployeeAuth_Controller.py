@@ -13,3 +13,11 @@ def createAuth(data: EmployeeAuthDTO):
 @authController.delete("/auth/{id}")
 def deleteAuth(id: int):
     return service.deleteAuth(id)
+
+@authController.post("/auth")
+def login(data: EmployeeAuthDTO):
+    validate= service.validate_credentials(data)
+    if validate:
+       return service.create_access_token(data)
+    else: 
+        return "fail"

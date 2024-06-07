@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from models.Bill.Bill_DTO import BillDTO
 from service.Bill.Bill_Service import BillService
+from models.Bill.Bill_Buy_DTO import BillBuyDTO
 
 
 billsController= APIRouter()
@@ -15,7 +16,7 @@ def getBillById(id:int):
     return service.getBillById(id)
 
 @billsController.post("/bills/create")
-def createBill(data: BillDTO):
+def createBill(data: BillBuyDTO):
     return service.createBills(data)
 
 @billsController.put("/bills/update/{id}")

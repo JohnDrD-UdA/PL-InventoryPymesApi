@@ -1,5 +1,5 @@
 from sqlalchemy import Column
-from sqlalchemy.sql.sqltypes import Integer,String,Float
+from sqlalchemy.sql.sqltypes import Integer,String,Float,BigInteger
 from config.config import Base
 
 class Bills(Base):
@@ -7,8 +7,8 @@ class Bills(Base):
 
     id= Column(Integer, primary_key=True)
     final_cost=Column(Float, nullable=False)
-    date_created=Column(Integer, nullable=False)
-    date_paid=Column(Integer, nullable=True)
+    date_created=Column(BigInteger, nullable=False)
+    date_paid=Column(BigInteger, nullable=True)
     state=Column(String(20), nullable=False)
     client_id=Column(Integer, nullable=False)
     owner_id=Column(Integer, nullable=False)

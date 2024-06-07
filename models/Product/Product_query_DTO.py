@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class ProductDTO(BaseModel):
+class ProductQueryDTO(BaseModel):
 
     name:Optional[str] 
     unit_cost:Optional[float] 
-    unit_id:Optional[int] 
-    prov_id:Optional[int]
-    amount: Optional[float]
+    unit:Optional[str]
     location:Optional[int]
+    amount: Optional[float]
+    prov_id:Optional[int] 

@@ -7,3 +7,4 @@ class EmployeeAuthDTO(BaseModel):
     last_login:Optional[int] 
     state: Optional[bool]
     user_id:Optional[int]
+    password:Optional[str]

@@ -3,7 +3,7 @@ from models.Employee_Auth.EmployeeAuth import EmployeeAuth
 from models.Employee_Auth.EmployeeAuth_DTO import EmployeeAuthDTO
 from passlib.context import CryptContext
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Union, Any
 from jose import jwt
 
@@ -39,28 +39,23 @@ class AuthService():
         except Exception as e:
             print(e)
             return "fail"
-    def validateToken(self,token:str):
-        payload = jwt.decode(
-            token, self.JWT_SECRET_KEY, algorithms=[self.ALGORITHM]
-        )
-        if datetime.fromtimestamp(payload['exp']) < datetime.now():
-            return True
-        return False
+        
     def create_access_token(self,data: EmployeeAuthDTO, expires_delta: int = None) -> str:
         if expires_delta is not None:
-            expires_delta = datetime.now() + expires_delta
+            expires_delta = datetime.now(timezone.utc) + expires_delta
         else:
-            expires_delta = datetime.now() + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
+            expires_delta= datetime.now(timezone.utc) + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
 
         to_encode = {"exp": expires_delta, "sub": str(data.userName)}
+        print(f"exp: {expires_delta}")
         encoded_jwt = jwt.encode(to_encode, self.JWT_SECRET_KEY, self.ALGORITHM)
         return encoded_jwt
     
     def create_refresh_token(self,subject: Union[str, Any], expires_delta: int = None) -> str:
         if expires_delta is not None:
-            expires_delta = datetime.now() + expires_delta
+            expires_delta = datetime.now(timezone.utc) + expires_delta
         else:
-            expires_delta = datetime.now() + timedelta(minutes=self.REFRESH_TOKEN_EXPIRE_MINUTES)
+            expires_delta = datetime.now(timezone.utc) + timedelta(minutes=self.REFRESH_TOKEN_EXPIRE_MINUTES)
     
         to_encode = {"exp": expires_delta, "sub": str(subject)}
         encoded_jwt = jwt.encode(to_encode, self.JWT_REFRESH_SECRET_KEY, self.ALGORITHM)
@@ -75,6 +70,5 @@ class AuthService():
         user= session.query(EmployeeAuth).filter(EmployeeAuth.user_name == data.userName).first()
         if user:
              result=self.verify_password(data.password, user.password)
-             print(result)
              return result
         return False

@@ -1,4 +1,4 @@
-from sqlalchemy import or_
+from sqlalchemy import and_
 from config.config import session
 from models.Bill.Bill_table import Bills
 from models.Bill.Bill_DTO import BillDTO
@@ -53,7 +53,8 @@ class BillService():
     def updateStock(self,items:list[StockDTO]):
         commit=True
         for item in items:
-            stock= session.query(Stocks).filter(Stocks.location_id== item.location_id and Stocks.product_id==item.product_id).first()
+            stock= session.query(Stocks).filter(and_(Stocks.location_id== item.location_id,Stocks.product_id==item.product_id)).first()
+            print(f"{stock.id}, {item.ammount}")
             if stock:
                 if stock.amount >=item.ammount:
                     stock.amount-=item.ammount

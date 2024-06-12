@@ -9,16 +9,16 @@ service= LocationService()
 TAG="Locations"
 @locationController.get("/location",dependencies=[Depends(validateToken)],tags=[TAG])
 def getLocation():
-    return service.getLocation()
+    return service.getLocations()
 
 @locationController.post("/location/create",dependencies=[Depends(validateToken)],tags=[TAG])
 def createLocation(data: locationDTO):
-    return service.createLocation(data)
+    return service.createLocations(data)
 
 @locationController.put("/location/update/{id}",dependencies=[Depends(validateToken)],tags=[TAG])
 def updateLocation(id:int, data:locationDTO):
-    return service.updateLocation(id,data)
+    return service.updateLocations(id,data)
 
 @locationController.delete("/location/{id}",dependencies=[Depends(validateToken)],tags=[TAG])
 def deleteLocation(id: int):
-    return service.deleteLocation(id)
+    return service.deleteLocations(id)

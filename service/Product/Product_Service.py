@@ -10,11 +10,11 @@ class ProductService():
         try:
             products= session.query(Products, Stocks, Units
             ).filter(Stocks.product_id==Products.id
+            ).filter(Units.id==Products.unit_id
             ).all()
             print(products[0]._asdict())
 
-            
-            #result=[products[i]._data for i in range(len(products))]
+        
             result=[self.formatProduct(products[i]._asdict()) for i in range(len(products))]
             return result
 
@@ -35,7 +35,7 @@ class ProductService():
             new_product= Products(name=data.name, unit_cost=data.unit_cost, unit_id=data.unit_id, prov_id=data.prov_id)
             session.add(new_product)
             session.commit()
-            new_stock= Stocks(amount=0, location_id= data.location, product_id=new_product.id)
+            new_stock= Stocks(amount=data.amount, location_id= data.location, product_id=new_product.id)
             session.add(new_stock)
             session.commit()
             return "OK"
